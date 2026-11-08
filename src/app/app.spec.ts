@@ -1,18 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { RouterModule } from '@angular/router';
+import { AppModule } from './app-module';
 import { App } from './app';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([])
-      ],
-      declarations: [
-        App
-      ],
-    })
-      .compileComponents();
+      imports: [AppModule],
+    }).compileComponents();
   });
 
   it('should create the app', () => {
@@ -21,10 +15,13 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render title', async () => {
+  it('should render the navigation and router outlet', async () => {
     const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, LearnAngular');
+    expect(compiled.querySelector('app-home-work-component')).not.toBeNull();
+    expect(compiled.textContent).toContain('Chapter 5');
+    expect(compiled.querySelector('router-outlet')).not.toBeNull();
   });
 });

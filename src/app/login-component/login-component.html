@@ -1,0 +1,62 @@
+<div class="container my-5 p-4 border rounded-3 bg-light" style="max-width: 400px">
+  <h2 class="text-center mb-4">Login</h2>
+
+  <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)" novalidate>
+    <div class="mb-3">
+      <label class="form-label" for="login-username">Username:</label>
+      <input
+        id="login-username"
+        type="text"
+        class="form-control"
+        name="username"
+        [(ngModel)]="user.username"
+        #username="ngModel"
+        required
+        minlength="4"
+        [class.is-invalid]="username.invalid && username.touched"
+      />
+      <div class="invalid-feedback">
+        <small *ngIf="username.errors?.['required']">Please enter your username.</small>
+        <small *ngIf="username.errors?.['minlength']">
+          Username must be at least 4 characters.
+        </small>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label" for="login-password">Password:</label>
+      <input
+        id="login-password"
+        type="password"
+        class="form-control"
+        name="password"
+        [(ngModel)]="user.password"
+        #password="ngModel"
+        required
+        [class.is-invalid]="password.invalid && password.touched"
+      />
+      <div class="invalid-feedback">Please enter your password.</div>
+    </div>
+
+    <div class="mb-3 form-check">
+      <input
+        id="remember-login"
+        type="checkbox"
+        class="form-check-input"
+        name="rememberMe"
+        [(ngModel)]="user.rememberMe"
+      />
+      <label class="form-check-label" for="remember-login">
+        Remember login information
+      </label>
+    </div>
+
+    <button type="submit" class="btn btn-success w-100" [disabled]="loginForm.invalid">
+      Login
+    </button>
+  </form>
+
+  <div *ngIf="loginMessage" class="alert alert-success mt-3 mb-0" role="status">
+    {{ loginMessage }}
+  </div>
+</div>

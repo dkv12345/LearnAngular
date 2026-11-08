@@ -1,0 +1,35 @@
+<p>books-component works!</p>
+
+<!-- Hiển thị thông báo lỗi nếu có -->
+@if (errMessage()) {
+  <div class="error-message" style="color: red; margin-bottom: 10px; font-weight: bold;">
+    {{ errMessage() }}
+  </div>
+}
+
+<table border="1" class="books-table">
+    <thead>
+        <tr>
+            <th>BookId</th>
+            <th>BookName</th>
+            <th>Price</th>
+            <th>Image</th>
+        </tr>
+    </thead>
+    <tbody>
+      @for (book of books(); track book.BookId) {
+        <tr>
+            <td>{{ book.BookId }}</td>
+            <td>{{ book.BookName }}</td>
+            <td>{{ book.Price }}</td>
+            <td>
+                <img [src]="server_images_link + '/' + book.Image" width="50" height="50" [alt]="book.BookName">
+            </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="4" style="text-align: center;">Not found books</td>
+        </tr>
+      }
+    </tbody>
+</table>

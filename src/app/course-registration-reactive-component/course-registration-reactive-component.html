@@ -1,0 +1,110 @@
+<div class="container my-4 p-4 border rounded-3 bg-white" style="max-width: 500px">
+  <form [formGroup]="regForm" (ngSubmit)="onSubmit()" novalidate>
+    <h2 class="text-center mb-4">COURSE REGISTRATION</h2>
+
+    <div class="mb-3">
+      <label class="form-label fw-bold" for="reactive-name">Name:</label>
+      <input
+        id="reactive-name"
+        type="text"
+        class="form-control"
+        formControlName="name"
+        placeholder="Enter your name"
+        [class.is-invalid]="regForm.controls.name.invalid && regForm.controls.name.touched"
+      />
+      <div
+        class="text-danger"
+        *ngIf="regForm.controls.name.invalid && regForm.controls.name.touched"
+      >
+        <small *ngIf="regForm.controls.name.errors?.['required']">Please enter your name.</small>
+        <small *ngIf="regForm.controls.name.errors?.['minlength']">
+          Name must be at least 3 characters.
+        </small>
+      </div>
+      <div class="text-danger" *ngIf="regForm.controls.name.errors?.['nameNotMatch']">
+        <small>Name must not contain special characters.</small>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-bold" for="reactive-email">Email:</label>
+      <input
+        id="reactive-email"
+        type="email"
+        class="form-control"
+        formControlName="email"
+        placeholder="test@gmail.com"
+        [class.is-invalid]="regForm.controls.email.invalid && regForm.controls.email.touched"
+      />
+      <div
+        class="text-danger"
+        *ngIf="regForm.controls.email.invalid && regForm.controls.email.touched"
+      >
+        <small *ngIf="regForm.controls.email.errors?.['required']">
+          Please enter your email.
+        </small>
+        <small *ngIf="regForm.controls.email.errors?.['email']">Email format is invalid.</small>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-bold" for="reactive-password">Password:</label>
+      <input
+        id="reactive-password"
+        type="password"
+        class="form-control"
+        formControlName="password"
+        [class.is-invalid]="
+          regForm.controls.password.invalid && regForm.controls.password.touched
+        "
+      />
+      <div
+        class="text-danger"
+        *ngIf="regForm.controls.password.invalid && regForm.controls.password.touched"
+      >
+        <small>Please enter your password.</small>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-bold" for="reactive-confirm-password">
+        Confirm Password:
+      </label>
+      <input
+        id="reactive-confirm-password"
+        type="password"
+        class="form-control"
+        formControlName="confirmPass"
+        [class.is-invalid]="
+          regForm.controls.confirmPass.invalid && regForm.controls.confirmPass.touched
+        "
+      />
+      <div
+        class="text-danger"
+        *ngIf="regForm.controls.confirmPass.invalid && regForm.controls.confirmPass.touched"
+      >
+        <small>Please confirm your password.</small>
+      </div>
+      <div
+        class="text-danger"
+        *ngIf="regForm.errors?.['mismatch'] && regForm.controls.confirmPass.touched"
+      >
+        <small>Confirmation password does not match.</small>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+      <button type="submit" class="btn btn-primary px-4" [disabled]="regForm.invalid">
+        Register
+      </button>
+      <button type="button" class="btn btn-secondary px-3" (click)="setDefaultValues()">
+        Default values
+      </button>
+    </div>
+  </form>
+
+  <div *ngIf="submittedData" class="alert alert-success mt-3 mb-0" role="status">
+    Registration submitted.
+    <pre class="mb-0 mt-2">{{ submittedData | json }}</pre>
+  </div>
+</div>

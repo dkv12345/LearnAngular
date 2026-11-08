@@ -1,0 +1,140 @@
+<div class="detail-container">
+  <!-- Breadcrumb Navigation -->
+  <nav class="breadcrumb-nav">
+    <button class="breadcrumb-back-btn" (click)="goBack()">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      <span>Back to Fashion List</span>
+    </button>
+    <div class="breadcrumb-trail">
+      <span>Home</span>
+      <span class="breadcrumb-sep">/</span>
+      <span>Fashions</span>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">{{ fashion()?.fashion_subject || currentSlugOrId() }}</span>
+    </div>
+  </nav>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="detail-loading">
+      <div class="spinner"></div>
+      <p>Resolving fashion slug & loading article...</p>
+      <code class="slug-loading-indicator">{{ currentSlugOrId() }}</code>
+    </div>
+  }
+
+  <!-- Error / Not Found State -->
+  @if (!isLoading() && errMessage()) {
+    <div class="detail-error-card">
+      <div class="error-badge">404 / Not Found</div>
+      <h2 class="error-title">Fashion Article Could Not Be Resolved</h2>
+      <p class="error-desc">{{ errMessage() }}</p>
+      <div class="error-meta">
+        <span>Attempted identifier: <code>{{ currentSlugOrId() }}</code></span>
+      </div>
+      <button class="btn-primary" (click)="goBack()">Return to Fashion List</button>
+    </div>
+  }
+
+  <!-- Detail Content Card -->
+  @if (!isLoading() && fashion(); as item) {
+    <article class="article-card">
+      <!-- Resolution Info Bar -->
+      <div class="resolution-bar">
+        <div class="resolution-left">
+          <span class="resolution-label">Resolved from Slug:</span>
+          <code class="resolved-slug-code">{{ currentSlugOrId() }}</code>
+        </div>
+        <div class="resolution-right">
+          <button class="btn-copy-slug" (click)="copySlug()" title="Copy slug link">
+            @if (copied()) {
+              <span>✓ Copied!</span>
+            } @else {
+              <span>🔗 Copy Slug</span>
+            }
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Layout: Image on Left / Top, Editorial Content on Right -->
+      <div class="article-layout">
+        <!-- Fashion Visual Column -->
+        <div class="article-visual">
+          <div class="image-frame">
+            @if (item.fashion_image) {
+              <img
+                [src]="item.fashion_image"
+                [alt]="item.fashion_subject"
+                class="article-image"
+              />
+            } @else {
+              <div class="image-placeholder">
+                <span class="placeholder-icon">👗</span>
+                <span>No Image Available</span>
+              </div>
+            }
+          </div>
+
+          <div class="meta-badges">
+            <div class="meta-item">
+              <span class="meta-label">Unique Column IdF</span>
+              <span class="meta-value idf-pill">#{{ item.IdF }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Style Category</span>
+              <span class="meta-value style-pill">{{ item.style || 'FASHION' }}</span>
+            </div>
+            @if (item._id) {
+              <div class="meta-item">
+                <span class="meta-label">Database _id</span>
+                <span class="meta-value id-pill">{{ item._id }}</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Editorial Info Column -->
+        <div class="article-body">
+          <div class="article-header">
+            <span class="category-eyebrow">{{ item.style || 'FASHION EDITORIAL' }}</span>
+            <h1 class="article-title">{{ item.fashion_subject }}</h1>
+          </div>
+
+          <div class="article-divider"></div>
+
+          <div class="article-text-content">
+            <p class="article-lead">
+              {{ item.fashion_detail }}
+            </p>
+          </div>
+
+          <div class="slug-info-box">
+            <div class="slug-info-header">
+              <span class="slug-info-title">SEO Slug Details</span>
+            </div>
+            <div class="slug-info-row">
+              <span class="slug-info-key">Slug string:</span>
+              <code class="slug-info-val">{{ item.slug }}</code>
+            </div>
+            <div class="slug-info-row">
+              <span class="slug-info-key">Numeric IdF:</span>
+              <span class="slug-info-val"><strong>{{ item.IdF }}</strong></span>
+            </div>
+          </div>
+
+          <!-- Bottom Action Buttons -->
+          <div class="article-actions">
+            <button class="btn-primary" (click)="goBack()">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              <span>Back to Directory</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+  }
+</div>

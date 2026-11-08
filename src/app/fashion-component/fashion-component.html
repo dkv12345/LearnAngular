@@ -1,0 +1,173 @@
+<div class="fashion-container">
+  <!-- Header / Hero Section -->
+  <header class="fashion-header">
+    <div class="header-badge">Editorial & Collections</div>
+    <h1 class="header-title">Vogue & Trends Fashion Directory</h1>
+    <p class="header-subtitle">
+      Explore contemporary runway reports, celebrity spotlights, and curated street style.
+      Each item features a unique numeric <code>IdF</code> and an SEO-friendly <code>Slug</code>.
+    </p>
+  </header>
+
+  <!-- Error Alert -->
+  @if (errMessage()) {
+    <div class="alert-error">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-content">
+        <strong>Error:</strong> {{ errMessage() }}
+      </div>
+      <button class="btn-retry" (click)="loadFashions()">Retry</button>
+    </div>
+  }
+
+  <!-- Toolbar: Search & Style Filter -->
+  <div class="fashion-toolbar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        placeholder="Search by subject, detail, slug or IdF..."
+        [value]="searchQuery()"
+        (input)="onSearchChange($event)"
+      />
+      @if (searchQuery()) {
+        <button class="clear-search-btn" (click)="searchQuery.set('')">✕</button>
+      }
+    </div>
+
+    <div class="filter-pills">
+      <button
+        class="filter-pill"
+        [class.active]="selectedStyle() === 'ALL'"
+        (click)="onFilterStyle('ALL')"
+      >
+        All Styles ({{ fashions().length }})
+      </button>
+      @for (st of styles(); track st) {
+        <button
+          class="filter-pill"
+          [class.active]="selectedStyle() === st"
+          (click)="onFilterStyle(st)"
+        >
+          {{ st }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading fashion collection...</p>
+    </div>
+  } @else {
+    <!-- Fashion Items Table View -->
+    <div class="table-card">
+      <div class="table-header-info">
+        <span class="count-badge">Showing {{ filteredFashions().length }} of {{ fashions().length }} items</span>
+      </div>
+
+      <div class="table-responsive">
+        <table class="fashion-table">
+          <thead>
+            <tr>
+              <th class="col-idf">IdF</th>
+              <th class="col-img">Image</th>
+              <th class="col-style">Style</th>
+              <th class="col-subject">Fashion Subject</th>
+              <th class="col-detail">Detail Excerpt</th>
+              <th class="col-slug">Generated Slug</th>
+              <th class="col-action">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (fashion of filteredFashions(); track fashion.IdF) {
+              <tr class="fashion-row">
+                <!-- IdF Unique Numeric Column -->
+                <td class="col-idf">
+                  <span class="idf-badge" title="Unique Fashion Numeric ID: {{ fashion.IdF }}">
+                    #{{ fashion.IdF }}
+                  </span>
+                </td>
+
+                <!-- Fashion Image -->
+                <td class="col-img">
+                  <div class="thumb-wrapper" (click)="viewDetailBySlug(fashion)">
+                    @if (fashion.fashion_image) {
+                      <img
+                        [src]="fashion.fashion_image"
+                        [alt]="fashion.fashion_subject"
+                        class="fashion-thumb"
+                        loading="lazy"
+                      />
+                    } @else {
+                      <div class="no-img-placeholder">👗</div>
+                    }
+                  </div>
+                </td>
+
+                <!-- Style Badge -->
+                <td class="col-style">
+                  <span class="style-tag">{{ fashion.style || 'FASHION' }}</span>
+                </td>
+
+                <!-- Subject -->
+                <td class="col-subject">
+                  <a
+                    class="subject-link"
+                    (click)="viewDetailBySlug(fashion)"
+                    title="Click to view details"
+                  >
+                    {{ fashion.fashion_subject }}
+                  </a>
+                </td>
+
+                <!-- Detail Preview -->
+                <td class="col-detail">
+                  <p class="detail-excerpt">{{ fashion.fashion_detail }}</p>
+                </td>
+
+                <!-- Generated Slug Column with Clickable Link -->
+                <td class="col-slug">
+                  <a
+                    class="slug-chip"
+                    (click)="viewDetailBySlug(fashion)"
+                    title="Select slug to resolve detail page: /fashion-detail/{{ fashion.slug }}"
+                  >
+                    <span class="slug-icon">🔗</span>
+                    <span class="slug-text">{{ fashion.slug }}</span>
+                  </a>
+                </td>
+
+                <!-- Action Button -->
+                <td class="col-action">
+                  <button
+                    class="btn-view"
+                    (click)="viewDetailBySlug(fashion)"
+                    title="View details for {{ fashion.fashion_subject }}"
+                  >
+                    <span>View</span>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="7" class="empty-state">
+                  <div class="empty-content">
+                    <span class="empty-icon">🧥</span>
+                    <h3>No fashion items found</h3>
+                    <p>Try adjusting your search query or style filter.</p>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>
